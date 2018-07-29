@@ -25,9 +25,17 @@ def sms():
     number = request.form['From']
     body = request.form['Body']
     image = request.values.get('MediaContentType0')
-
+    FromCity = request.values.get('FromCity')
+    print(FromCity)
+    FromState = request.values.get('FromState')
+    print(FromCity)
+    FromZip = request.values.get('FromZip')
+    print(FromCity)
     print(body)
-
+    resp = MessagingResponse()
+    if 'clinics' in body:
+        resp.message("Some nearby affordable hospitals are \n 1. Clinica Monument - Pleasant Hill, Location: 2.48 miles from Walnut Creek \n 2. El Cerrito Health Center El Cerrito Health Center - Concord, Location: 2.76 miles from Walnut Creek")
+        return str(resp)
 
     if image:
         image_url = request.values.get('MediaUrl0')
@@ -40,12 +48,16 @@ def sms():
 
     else:
         api_2 = requests.get(
-            'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/ff06620c-fbd3-4b45-9c27-e74bd2fc256e?subscription-key=f7713074ac8842908a0bab60b0153486&verbose=true&timezoneOffset=0&q=' + text)
+            'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/ff06620c-fbd3-4b45-9c27-e74bd2fc256e?subscription-key=f7713074ac8842908a0bab60b0153486&verbose=true&timezoneOffset=0&q=' + body)
+        print(api_2.json(),file=sys.stderr)
         problem_1 = api_2.json()['entities'][0]['type']
+
         prob=str(problem_1)
-        resp = MessagingResponse()
+
+
 
     message = client.messages.create(to=number, from_='+18646591878', body=remedies(prob))
+    # message = client.messages.create(to=number, from_='+18646591878', body=location_serv(FromCity))
     return "True"
 
 
@@ -56,6 +68,13 @@ def remedies(prob):
         respjson = json.load(fileHandler)
         rem = respjson[prob]
         return str("You might be experiencing {} ".format(prob) + rem)
+
+def location_serv(place):
+        with open("locations.json", 'r') as fileHandler:
+            respjson = json.load(fileHandler)
+            rem = respjson[place]
+            return str(" {} ".format(place) + rem)
+
 #
 # @app.route('/', methods=[POST])
 # def geolocate_user():
