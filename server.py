@@ -37,6 +37,9 @@ def sms():
         resp.message("Some nearby affordable hospitals are \n 1. Clinica Monument - Pleasant Hill, Location: 2.48 miles from Walnut Creek \n 2. El Cerrito Health Center El Cerrito Health Center - Concord, Location: 2.76 miles from Walnut Creek")
         return str(resp)
 
+    if 'Thanks' or 'Thank you' in body:
+        resp.message("Your welcome!")
+        return str(resp)
     if image:
         image_url = request.values.get('MediaUrl0')
         api_1 = "https://southcentralus.api.cognitive.microsoft.com/customvision/v2.0/Prediction/2536b569-70fe-47fd-8d44-d17bdee86539/url?iterationId=6d83ffad-cc8c-4995-a2f4-fd6012eb00fc"
@@ -67,7 +70,7 @@ def remedies(prob):
     with open("remedies.json", 'r') as fileHandler:
         respjson = json.load(fileHandler)
         rem = respjson[prob]
-        return str("You might be experiencing {} ".format(prob) + rem)
+        return str("You might be experiencing {} \n".format(prob) + rem)
 
 def location_serv(place):
         with open("locations.json", 'r') as fileHandler:
