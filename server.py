@@ -2,7 +2,9 @@ from flask import Flask, request, redirect, flash
 from twilio.rest import Client
 from twilio import twiml
 import json
-from pprint import pprint
+from twilio.twiml.messaging_response import MessagingResponse
+# from pprint import pprin
+import sys
 
 app = Flask(__name__)
 
@@ -16,31 +18,32 @@ auth_token = 'b6cf30d56a1d725f6974f2838ec9606e'
 
 client = Client(account_sid, auth_token)
 
-@app.route("/sms", methods=['POST'])
+@app.route("/sms", methods=['POST','GET'])
 def sms():
 # twilio receives incoming text message
     number = request.form['From']
     body = request.form['Body']
+    image = request.form['MediaContentType0']
 
+    print(body)
+
+
+    if image:
+        image_url = request.values.get('MediaUrl0')
+        print(image_url, file=sys.stderr)
+    # image = request.values.get(‘MediaContentType0’)
     response = 'We got this!'
-
-    resp = twiml.Response()
-    resp.message(f'Hello! {number}, your ailment is {response}')
+    resp = MessagingResponse()
+    # resp = twiml.Response()
+    resp.message('Hello! your ailment.')
 
     return str(resp)
 
-def send_sms():
-
-    message = client.messages.create(
-                                  body='TESTING HACKATHON!!',
-                                  from_='+18646591878',
-                                  to='+19253007799'
-                              )
-
-@app.route('/', methods=[POST])
-def geolocate_user():
-    """Find the user with cell towers and their phone #"""
-    https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyD_DOgSSqBrqTUFqeqeudDT6XlOtZ8huZQ
+#
+# @app.route('/', methods=[POST])
+# def geolocate_user():
+#     """Find the user with cell towers and their phone #"""
+#     https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyD_DOgSSqBrqTUFqeqeudDT6XlOtZ8huZQ
 
 if __name__ == "__main__":
     app.run(debug=True)
