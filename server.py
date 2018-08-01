@@ -14,8 +14,8 @@ json_string = open("remedies.json").read()
 remedies_dict = json.loads(json_string)
 
 # Twilip API authorization
-account_sid = 'AC6543523cc0a87d4c3da895b76fa027d5'
-auth_token = 'b6cf30d56a1d725f6974f2838ec9606e'
+account_sid = ''
+auth_token = ''
 
 client = Client(account_sid, auth_token)
 
